@@ -1,0 +1,2268 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>AI Toolbox - Hub de Projetos e Ferramentas</title>
+  
+  <!-- PWA & Apple Web App Meta Tags -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="AI Toolbox">
+  <meta name="theme-color" content="#4f46e5">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans select-none sm:select-auto">
+
+  <!-- Header -->
+  <header class="bg-white/85 backdrop-blur-md border-b border-slate-200/80 sticky top-0 z-30 transition-all">
+    <div class="max-w-6xl mx-auto px-4 py-3 sm:py-3.5 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div class="flex items-center justify-between w-full sm:w-auto">
+        <div class="flex items-center gap-3 group cursor-pointer" onclick="switchTab('home')">
+          <div class="w-10 h-10 bg-gradient-to-tr from-indigo-600 via-indigo-500 to-indigo-400 rounded-xl flex items-center justify-center text-white shadow-md shadow-indigo-500/25 ring-1 ring-white/40 group-hover:scale-105 transition-all">
+            <i class="fa-solid fa-toolbox text-lg"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h1 class="text-base sm:text-lg font-extrabold text-slate-900 leading-tight tracking-tight">AI Toolbox</h1>
+              <span class="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-indigo-50 text-indigo-700 border border-indigo-200/60 uppercase tracking-wider">v2.0</span>
+            </div>
+            <p class="text-[11px] text-slate-500 font-medium">Hub de Projetos, Recursos e Ferramentas de IA</p>
+          </div>
+        </div>
+
+        <!-- Mobile / iPhone Connect Button (Header) -->
+        <button 
+          onclick="openQrModal()" 
+          title="Abrir no iPhone" 
+          class="sm:hidden flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-medium active:bg-indigo-100"
+        >
+          <i class="fa-solid fa-mobile-screen"></i>
+          <span>iPhone</span>
+        </button>
+      </div>
+
+      <div class="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
+        <!-- Navigation Tabs (Reorganizados) -->
+        <nav class="flex items-center bg-slate-100 p-1 rounded-xl text-xs sm:text-sm font-medium w-full sm:w-auto justify-around sm:justify-start flex-wrap gap-1">
+          <button id="tab-home-btn" class="nav-tab active px-3 sm:px-4 py-2 rounded-lg transition-all" onclick="switchTab('home')">
+            <i class="fa-solid fa-house mr-1 text-indigo-600"></i> Início
+          </button>
+          <button id="tab-github-btn" class="nav-tab px-3 sm:px-4 py-2 rounded-lg transition-all" onclick="switchTab('github')">
+            <i class="fa-solid fa-shapes mr-1 text-slate-800"></i> Recursos
+          </button>
+          <button id="tab-prompts-btn" class="nav-tab px-3 sm:px-4 py-2 rounded-lg transition-all" onclick="switchTab('prompts')">
+            <i class="fa-solid fa-comment-dots mr-1 text-emerald-600"></i> Prompts
+          </button>
+          <button id="tab-skills-btn" class="nav-tab px-3 sm:px-4 py-2 rounded-lg transition-all" onclick="switchTab('skills')">
+            <i class="fa-solid fa-bolt mr-1 text-amber-500"></i> Skills
+          </button>
+          <button id="tab-projects-btn" class="nav-tab px-3 sm:px-4 py-2 rounded-lg transition-all" onclick="switchTab('projects')">
+            <i class="fa-solid fa-diagram-project mr-1 text-indigo-600"></i> Os Meus Projetos
+          </button>
+        </nav>
+
+        <!-- Desktop iPhone Connect Button -->
+        <button 
+          onclick="openQrModal()" 
+          title="Abrir no iPhone via Wi-Fi" 
+          class="hidden sm:flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium transition-colors cursor-pointer"
+        >
+          <i class="fa-solid fa-qrcode text-indigo-600"></i>
+          <span>Ligar ao iPhone</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-6xl mx-auto px-4 py-4 sm:py-6 flex-1 w-full space-y-6">
+
+    <!-- BARRA DE PESQUISA RÁPIDA (Logo abaixo do menu de separadores) -->
+    <div class="w-full">
+      <div 
+        onclick="openGlobalSearch()"
+        class="group relative bg-white hover:bg-slate-50/80 cursor-pointer rounded-2xl p-3 sm:p-3.5 border border-slate-200/90 hover:border-indigo-300 shadow-xs hover:shadow-md transition-all flex items-center justify-between gap-3"
+      >
+        <div class="flex items-center gap-3.5 flex-1 min-w-0">
+          <div class="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:scale-105 group-hover:bg-indigo-600 group-hover:text-white transition-all shadow-2xs">
+            <i class="fa-solid fa-magnifying-glass text-sm"></i>
+          </div>
+          <div class="flex flex-col min-w-0">
+            <span class="text-xs sm:text-sm font-medium text-slate-700 group-hover:text-slate-900 truncate">
+              Pesquisa rápida em repositórios, projetos e skills...
+            </span>
+            <span class="text-[11px] text-slate-400">
+              Escreve uma palavra-chave para encontrar tudo instantaneamente
+            </span>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 shrink-0">
+          <span class="hidden sm:inline-flex items-center gap-1 px-2.5 py-1 text-xs font-mono font-medium text-slate-500 bg-slate-100 group-hover:bg-indigo-50 group-hover:text-indigo-700 rounded-lg border border-slate-200 group-hover:border-indigo-200 transition-colors">
+            <i class="fa-solid fa-keyboard text-[10px] text-slate-400 group-hover:text-indigo-500"></i>
+            <span>Ctrl + K</span>
+          </span>
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 group-hover:text-indigo-600 transition-colors">
+            <i class="fa-solid fa-arrow-right text-xs"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEÇÃO PRINCIPAL: INÍCIO (DASHBOARD GERAL COM O MELHOR DE TUDO) -->
+    <section id="tab-home" class="tab-pane space-y-6">
+      <!-- Banner de Boas-Vindas e Ações Rápidas -->
+      <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-sm relative overflow-hidden">
+        <div class="absolute -right-10 -bottom-10 opacity-10 text-9xl pointer-events-none">
+          <i class="fa-solid fa-toolbox"></i>
+        </div>
+        <div class="relative z-10 max-w-3xl space-y-2">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-indigo-200 text-xs font-medium backdrop-blur-xs">
+            <i class="fa-solid fa-sparkles text-amber-300"></i>
+            <span>Plataforma Integrada de IA & Desenvolvimento</span>
+          </div>
+          <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight">Visão Geral da Tua Toolbox</h2>
+          <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+            Acede num único local aos teus projetos de software, recursos do GitHub e Hugging Face, biblioteca de prompts otimizados e skills para agentes de IA.
+          </p>
+          <div class="pt-3 flex flex-wrap items-center gap-2.5">
+            <button onclick="switchTab('github'); switchGitHubSubView('analyze');" class="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold flex items-center gap-2 transition-all shadow-xs cursor-pointer">
+              <i class="fa-solid fa-wand-magic-sparkles"></i>
+              <span>Analisar Repositório</span>
+            </button>
+            <button onclick="switchTab('projects'); switchProjectsSubTab('prompts'); openCreatePromptModal();" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold flex items-center gap-2 transition-all shadow-xs cursor-pointer">
+              <i class="fa-solid fa-plus"></i>
+              <span>Novo Prompt</span>
+            </button>
+            <button onclick="switchTab('projects'); switchProjectsSubTab('skills'); openCreateSkillModal();" class="px-3.5 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-xs font-semibold flex items-center gap-2 transition-all shadow-xs cursor-pointer">
+              <i class="fa-solid fa-bolt"></i>
+              <span>Novo Skill</span>
+            </button>
+            <button onclick="switchTab('projects'); switchProjectsSubTab('code'); openRegisterModal();" class="px-3.5 py-2 rounded-xl bg-white/15 hover:bg-white/25 text-white text-xs font-semibold flex items-center gap-2 transition-all cursor-pointer">
+              <i class="fa-solid fa-folder-plus"></i>
+              <span>Registar Projeto</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4 Cartões de Estatísticas / Métricas Rápidas -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+        <!-- Métrica 1: Recursos -->
+        <div onclick="switchTab('github'); switchGitHubSubView('catalog');" class="group interactive-card bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/90 hover:border-indigo-300 shadow-xs cursor-pointer">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-semibold text-slate-500">Recursos & Repos</span>
+            <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-sm group-hover:scale-110 transition-transform">
+              <i class="fa-solid fa-shapes"></i>
+            </div>
+          </div>
+          <div class="flex items-baseline gap-2">
+            <span id="home-stat-resources" class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">0</span>
+            <span class="text-[11px] text-slate-400">guardados</span>
+          </div>
+          <p class="text-[11px] text-indigo-600 mt-2 font-medium flex items-center gap-1">
+            <span>Ver catálogo</span>
+            <i class="fa-solid fa-arrow-right text-[10px] group-hover:translate-x-1 transition-transform"></i>
+          </p>
+        </div>
+
+        <!-- Métrica 2: Prompts -->
+        <div onclick="switchTab('prompts');" class="group interactive-card bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/90 hover:border-emerald-300 shadow-xs cursor-pointer">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-semibold text-slate-500">Prompts de IA</span>
+            <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-sm group-hover:scale-110 transition-transform">
+              <i class="fa-solid fa-comment-dots"></i>
+            </div>
+          </div>
+          <div class="flex items-baseline gap-2">
+            <span id="home-stat-prompts" class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">0</span>
+            <span class="text-[11px] text-slate-400">na biblioteca</span>
+          </div>
+          <p class="text-[11px] text-emerald-600 mt-2 font-medium flex items-center gap-1">
+            <span>Explorar prompts</span>
+            <i class="fa-solid fa-arrow-right text-[10px] group-hover:translate-x-1 transition-transform"></i>
+          </p>
+        </div>
+
+        <!-- Métrica 3: Skills -->
+        <div onclick="switchTab('skills');" class="group interactive-card bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/90 hover:border-amber-300 shadow-xs cursor-pointer">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-semibold text-slate-500">Skills de Agente</span>
+            <div class="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center text-sm group-hover:scale-110 transition-transform">
+              <i class="fa-solid fa-bolt"></i>
+            </div>
+          </div>
+          <div class="flex items-baseline gap-2">
+            <span id="home-stat-skills" class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">0</span>
+            <span class="text-[11px] text-slate-400">disponíveis</span>
+          </div>
+          <p class="text-[11px] text-amber-700 mt-2 font-medium flex items-center gap-1">
+            <span>Ver skills</span>
+            <i class="fa-solid fa-arrow-right text-[10px] group-hover:translate-x-1 transition-transform"></i>
+          </p>
+        </div>
+
+        <!-- Métrica 4: Os Meus Projetos -->
+        <div onclick="switchTab('projects'); switchProjectsSubTab('code');" class="group interactive-card bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/90 hover:border-purple-300 shadow-xs cursor-pointer">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-medium text-slate-500">Os Meus Projetos</span>
+            <div class="w-8 h-8 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center text-sm group-hover:scale-110 transition-transform">
+              <i class="fa-solid fa-diagram-project"></i>
+            </div>
+          </div>
+          <div class="flex items-baseline gap-2">
+            <span id="home-stat-projects" class="text-2xl sm:text-3xl font-extrabold text-slate-900">0</span>
+            <span class="text-[11px] text-slate-400">catalogados</span>
+          </div>
+          <p class="text-[11px] text-purple-700 mt-2 font-medium flex items-center gap-1">
+            <span>Abrir projetos</span>
+            <i class="fa-solid fa-arrow-right text-[10px] group-hover:translate-x-1 transition-transform"></i>
+          </p>
+        </div>
+      </div>
+
+      <!-- Grade com as 4 Parcelas Informativas (Um pouco de tudo) -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <!-- Bloco 1: Os Meus Projetos de Software Recentes -->
+        <div class="interactive-card bg-white rounded-3xl p-5 sm:p-6 border border-slate-200/90 shadow-xs flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between pb-3.5 border-b border-slate-100 mb-4">
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-xs font-bold shadow-2xs">
+                  <i class="fa-solid fa-code"></i>
+                </div>
+                <h3 class="text-sm sm:text-base font-bold text-slate-900 tracking-tight">Projetos em Desenvolvimento</h3>
+              </div>
+              <button onclick="switchTab('projects'); switchProjectsSubTab('code');" class="text-xs text-purple-600 hover:text-purple-800 font-semibold cursor-pointer">
+                Ver todos
+              </button>
+            </div>
+            <div id="home-recent-projects" class="space-y-2.5">
+              <div class="text-xs text-slate-400 py-4 text-center">A carregar projetos...</div>
+            </div>
+          </div>
+          <div class="pt-3.5 mt-3 border-t border-slate-100 flex items-center justify-between">
+            <span class="text-[11px] text-slate-500 font-medium">Pastas de código no teu PC</span>
+            <button onclick="switchTab('projects'); switchProjectsSubTab('code'); openRegisterModal();" class="text-xs font-semibold text-purple-700 hover:text-purple-900 flex items-center gap-1 cursor-pointer">
+              <i class="fa-solid fa-plus text-[10px]"></i> Registar novo
+            </button>
+          </div>
+        </div>
+
+        <!-- Bloco 2: Recursos & Repositórios em Destaque -->
+        <div class="interactive-card bg-white rounded-3xl p-5 sm:p-6 border border-slate-200/90 shadow-xs flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between pb-3.5 border-b border-slate-100 mb-4">
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xs font-bold shadow-2xs">
+                  <i class="fa-solid fa-shapes"></i>
+                </div>
+                <h3 class="text-sm sm:text-base font-bold text-slate-900 tracking-tight">Recursos Guardados & Tendências</h3>
+              </div>
+              <button onclick="switchTab('github'); switchGitHubSubView('catalog');" class="text-xs text-blue-600 hover:text-blue-800 font-semibold cursor-pointer">
+                Ver catálogo
+              </button>
+            </div>
+            <div id="home-recent-resources" class="space-y-2.5">
+              <div class="text-xs text-slate-400 py-4 text-center">A carregar recursos...</div>
+            </div>
+          </div>
+          <div class="pt-3.5 mt-3 border-t border-slate-100 flex items-center justify-between">
+            <span class="text-[11px] text-slate-500 font-medium">GitHub & Hugging Face</span>
+            <button onclick="switchTab('github'); switchGitHubSubView('trending');" class="text-xs font-semibold text-blue-700 hover:text-blue-900 flex items-center gap-1 cursor-pointer">
+              <i class="fa-solid fa-fire text-amber-500"></i> Tendências de hoje
+            </button>
+          </div>
+        </div>
+
+        <!-- Bloco 3: Prompts em Destaque & Criação Rápida -->
+        <div class="interactive-card bg-white rounded-3xl p-5 sm:p-6 border border-slate-200/90 shadow-xs flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between pb-3.5 border-b border-slate-100 mb-4">
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xs font-bold shadow-2xs">
+                  <i class="fa-solid fa-comment-dots"></i>
+                </div>
+                <h3 class="text-sm sm:text-base font-bold text-slate-900 tracking-tight">Prompts de IA</h3>
+              </div>
+              <button onclick="switchTab('prompts');" class="text-xs text-emerald-600 hover:text-emerald-800 font-semibold cursor-pointer">
+                Ver todos
+              </button>
+            </div>
+            <div id="home-recent-prompts" class="space-y-2.5">
+              <div class="text-xs text-slate-400 py-4 text-center">A carregar prompts...</div>
+            </div>
+          </div>
+          <div class="pt-3.5 mt-3 border-t border-slate-100 flex items-center justify-between">
+            <span class="text-[11px] text-slate-500 font-medium">Para Claude, ChatGPT, Gemini e outros</span>
+            <button onclick="switchTab('prompts'); openCreatePromptModal();" class="text-xs font-semibold text-emerald-700 hover:text-emerald-900 flex items-center gap-1 cursor-pointer">
+              <i class="fa-solid fa-plus text-[10px]"></i> Criar prompt
+            </button>
+          </div>
+        </div>
+
+        <!-- Bloco 4: Skills de Agentes & Automação -->
+        <div class="interactive-card bg-white rounded-3xl p-5 sm:p-6 border border-slate-200/90 shadow-xs flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between pb-3.5 border-b border-slate-100 mb-4">
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xs font-bold shadow-2xs">
+                  <i class="fa-solid fa-bolt"></i>
+                </div>
+                <h3 class="text-sm sm:text-base font-bold text-slate-900 tracking-tight">Skills de Agentes IA</h3>
+              </div>
+              <button onclick="switchTab('skills');" class="text-xs text-amber-700 hover:text-amber-900 font-semibold cursor-pointer">
+                Ver skills
+              </button>
+            </div>
+            <div id="home-recent-skills" class="space-y-2.5">
+              <div class="text-xs text-slate-400 py-4 text-center">A carregar skills...</div>
+            </div>
+          </div>
+          <div class="pt-3.5 mt-3 border-t border-slate-100 flex items-center justify-between">
+            <span class="text-[11px] text-slate-500 font-medium">OpenCode & Antigravity</span>
+            <button onclick="switchTab('skills'); openCreateSkillModal();" class="text-xs font-semibold text-amber-700 hover:text-amber-900 flex items-center gap-1 cursor-pointer">
+              <i class="fa-solid fa-plus text-[10px]"></i> Criar skill
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SEÇÃO PRINCIPAL RECURSOS COM DASHBOARD E SUBVIEWS -->
+    <section id="tab-github" class="tab-pane hidden">
+      <!-- Navegação Interna de Recursos (Sub-tabs / Breadcrumb) -->
+      <div class="bg-white rounded-2xl p-3 sm:p-4 border border-slate-200 shadow-sm mb-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-slate-900 text-white flex items-center justify-center font-bold text-sm shadow-xs">
+            <i class="fa-solid fa-shapes text-base text-indigo-400"></i>
+          </div>
+          <div>
+            <h2 class="text-sm sm:text-base font-bold text-slate-900 leading-tight">Hub de Recursos</h2>
+            <p class="text-[11px] text-slate-500">Repositórios do GitHub, Modelos do Hugging Face e Projetos Locais</p>
+          </div>
+        </div>
+
+        <!-- Subview Pills -->
+        <div class="flex items-center bg-slate-100 p-1 rounded-xl text-xs font-medium w-full sm:w-auto overflow-x-auto justify-start sm:justify-end gap-1">
+          <button id="gh-subtab-hub-btn" onclick="switchGitHubSubView('hub')" class="gh-subtab-btn active px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 whitespace-nowrap">
+            <i class="fa-solid fa-table-cells-large text-slate-600"></i>
+            <span>Painel</span>
+          </button>
+          <button id="gh-subtab-analyze-btn" onclick="switchGitHubSubView('analyze')" class="gh-subtab-btn px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 whitespace-nowrap">
+            <i class="fa-solid fa-wand-magic-sparkles text-indigo-600"></i>
+            <span>Analisador</span>
+          </button>
+          <button id="gh-subtab-catalog-btn" onclick="switchGitHubSubView('catalog')" class="gh-subtab-btn px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 whitespace-nowrap">
+            <i class="fa-solid fa-bookmark text-blue-600"></i>
+            <span>Catálogo</span>
+          </button>
+          <button id="gh-subtab-local-btn" onclick="switchGitHubSubView('local')" class="gh-subtab-btn px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 whitespace-nowrap">
+            <i class="fa-solid fa-hard-drive text-emerald-600"></i>
+            <span>No Computador</span>
+          </button>
+          <button id="gh-subtab-trending-btn" onclick="switchGitHubSubView('trending')" class="gh-subtab-btn px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 whitespace-nowrap">
+            <i class="fa-solid fa-fire text-amber-500"></i>
+            <span>Tendências</span>
+          </button>
+          <button id="gh-subtab-facebook-btn" onclick="switchGitHubSubView('facebook')" class="gh-subtab-btn px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 whitespace-nowrap">
+            <i class="fa-brands fa-facebook text-sky-600"></i>
+            <span>Facebook & Média</span>
+            <span id="hub-media-badge-btn" class="ml-1 px-1.5 py-0.2 bg-sky-100 text-sky-800 text-[10px] rounded-full font-bold">0</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 1. HUB DASHBOARD (4 PARCELAS) -->
+      <div id="github-subview-hub" class="github-subview space-y-6">
+        <!-- Banner introdutório -->
+        <div class="bg-gradient-to-r from-slate-900 to-indigo-950 text-white rounded-2xl p-6 sm:p-7 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
+          <div class="space-y-1.5">
+            <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-white/10 text-slate-200 text-xs font-medium">
+              <i class="fa-solid fa-shapes text-indigo-400"></i>
+              <span>Hub Central de Recursos & Modelos</span>
+            </div>
+            <h3 class="text-lg sm:text-xl font-bold">Painel de Recursos</h3>
+            <p class="text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed">
+              Explora, analisa e organiza repositórios de código do GitHub, modelos de IA e datasets do Hugging Face. Escolhe uma das parcelas abaixo para aceder à ferramenta desejada:
+            </p>
+          </div>
+          <div class="flex items-center gap-2 text-xs shrink-0">
+            <button onclick="switchGitHubSubView('analyze')" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold transition-all shadow-sm flex items-center gap-2 cursor-pointer">
+              <i class="fa-solid fa-wand-magic-sparkles"></i>
+              <span>Analisar Repositório</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- As 4 Parcelas / Cards Interativos -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+          <!-- Parcela 1: Analisador -->
+          <div 
+            onclick="switchGitHubSubView('analyze')" 
+            class="group bg-white hover:bg-indigo-50/40 cursor-pointer rounded-2xl p-5 sm:p-6 border border-slate-200 hover:border-indigo-300 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
+          >
+            <div>
+              <div class="flex items-start justify-between gap-3 mb-3">
+                <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl group-hover:scale-105 group-hover:bg-indigo-600 group-hover:text-white transition-all shadow-xs">
+                  <i class="fa-solid fa-wand-magic-sparkles"></i>
+                </div>
+                <span class="text-[11px] font-semibold uppercase px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-700">Com Gemini IA</span>
+              </div>
+              <h4 class="text-base font-bold text-slate-900 group-hover:text-indigo-900 transition-colors">Analisador de Repositórios</h4>
+              <p class="text-xs sm:text-sm text-slate-600 mt-1 leading-relaxed">
+                Cola o link de qualquer repositório do GitHub. A IA lê a documentação e resume para que serve, o que faz e como correr em português direto.
+              </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-indigo-600 group-hover:text-indigo-700">
+              <span>Abrir Analisador</span>
+              <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+            </div>
+          </div>
+
+          <!-- Parcela 2: Catálogo de Repositórios -->
+          <div 
+            onclick="switchGitHubSubView('catalog')" 
+            class="group bg-white hover:bg-blue-50/40 cursor-pointer rounded-2xl p-5 sm:p-6 border border-slate-200 hover:border-blue-300 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
+          >
+            <div>
+              <div class="flex items-start justify-between gap-3 mb-3">
+                <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl group-hover:scale-105 group-hover:bg-blue-600 group-hover:text-white transition-all shadow-xs">
+                  <i class="fa-solid fa-bookmark"></i>
+                </div>
+                <span id="hub-catalog-count-badge" class="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-blue-50 text-blue-700">0 guardados</span>
+              </div>
+              <h4 class="text-base font-bold text-slate-900 group-hover:text-blue-900 transition-colors">Catálogo de Repositórios</h4>
+              <p class="text-xs sm:text-sm text-slate-600 mt-1 leading-relaxed">
+                Consulta e organiza a biblioteca de repositórios que já analisaste e guardaste, divididos por categorias e favoritos.
+              </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-blue-600 group-hover:text-blue-700">
+              <span>Ver Catálogo</span>
+              <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+            </div>
+          </div>
+
+          <!-- Parcela 3: Repositórios no PC -->
+          <div 
+            onclick="switchGitHubSubView('local')" 
+            class="group bg-white hover:bg-emerald-50/40 cursor-pointer rounded-2xl p-5 sm:p-6 border border-slate-200 hover:border-emerald-300 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
+          >
+            <div>
+              <div class="flex items-start justify-between gap-3 mb-3">
+                <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl group-hover:scale-105 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-xs">
+                  <i class="fa-solid fa-hard-drive"></i>
+                </div>
+                <span id="hub-local-count-badge" class="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700">0 locais</span>
+              </div>
+              <h4 class="text-base font-bold text-slate-900 group-hover:text-emerald-900 transition-colors">Repositórios no Computador</h4>
+              <p class="text-xs sm:text-sm text-slate-600 mt-1 leading-relaxed">
+                Faz scan ao disco para encontrar projetos Git existentes nas tuas pastas, ver os respetivos caminhos e abri-los no explorador.
+              </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-emerald-600 group-hover:text-emerald-700">
+              <span>Fazer Scan / Ver Locais</span>
+              <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+            </div>
+          </div>
+
+          <!-- Parcela 4: Tendências & IA -->
+          <div 
+            onclick="switchGitHubSubView('trending')" 
+            class="group bg-white hover:bg-amber-50/40 cursor-pointer rounded-2xl p-5 sm:p-6 border border-slate-200 hover:border-amber-300 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
+          >
+            <div>
+              <div class="flex items-start justify-between gap-3 mb-3">
+                <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl group-hover:scale-105 group-hover:bg-amber-500 group-hover:text-white transition-all shadow-xs">
+                  <i class="fa-solid fa-fire"></i>
+                </div>
+                <span class="text-[11px] font-semibold uppercase px-2.5 py-1 rounded-full bg-amber-50 text-amber-800">GitHub & HF</span>
+              </div>
+              <h4 class="text-base font-bold text-slate-900 group-hover:text-amber-900 transition-colors">Tendências & Modelos de IA</h4>
+              <p class="text-xs sm:text-sm text-slate-600 mt-1 leading-relaxed">
+                Descobre os projetos mais populares de hoje no GitHub mundial e os modelos de IA e Spaces em alta no Hugging Face com resumos explicativos.
+              </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-amber-600 group-hover:text-amber-700">
+              <span>Explorar Tendências</span>
+              <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+            </div>
+          </div>
+
+          <!-- Parcela 5: Facebook & Média Guardada -->
+          <div 
+            onclick="switchGitHubSubView('facebook')" 
+            class="group bg-white hover:bg-sky-50/40 cursor-pointer rounded-2xl p-5 sm:p-6 border border-slate-200 hover:border-sky-300 shadow-xs hover:shadow-md transition-all flex flex-col justify-between sm:col-span-2 md:col-span-1"
+          >
+            <div>
+              <div class="flex items-start justify-between gap-3 mb-3">
+                <div class="w-12 h-12 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center text-xl group-hover:scale-105 group-hover:bg-sky-600 group-hover:text-white transition-all shadow-xs">
+                  <i class="fa-brands fa-facebook"></i>
+                </div>
+                <span id="hub-media-count-badge" class="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-sky-50 text-sky-700">0 guardados</span>
+              </div>
+              <h4 class="text-base font-bold text-slate-900 group-hover:text-sky-900 transition-colors">Facebook & Média</h4>
+              <p class="text-xs sm:text-sm text-slate-600 mt-1 leading-relaxed">
+                Extrai e descarrega vídeos e publicações do Facebook diretamente no teu iPhone ou PC. A IA gera um resumo explicativo e podes ver os vídeos sem sair da app.
+              </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-sky-600 group-hover:text-sky-700">
+              <span>Abrir Facebook & Média</span>
+              <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. SUBVIEW: ANALISADOR DEDICADO -->
+      <div id="github-subview-analyze" class="github-subview hidden space-y-6">
+        <div class="flex items-center justify-between">
+          <button onclick="switchGitHubSubView('hub')" class="inline-flex items-center gap-1.5 text-xs font-medium text-slate-600 hover:text-indigo-600 transition-colors cursor-pointer bg-white px-3 py-1.5 rounded-lg border border-slate-200 shadow-2xs">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span>Voltar ao Painel GitHub</span>
+          </button>
+        </div>
+
+        <div class="bg-white rounded-2xl p-5 sm:p-8 border border-slate-200 shadow-sm">
+          <h2 class="text-base sm:text-lg font-semibold text-slate-900 mb-1">Descomplicar um Repositório</h2>
+          <p class="text-xs sm:text-sm text-slate-600 mb-5">
+            Insere o link do GitHub. A inteligência artificial analisa a documentação e explica tudo em português direto e acessível.
+          </p>
+
+          <form id="analyze-form" onsubmit="handleAnalyze(event)" class="flex flex-col sm:flex-row gap-3">
+            <div class="relative flex-1">
+              <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                <i class="fa-brands fa-github text-lg"></i>
+              </div>
+              <input 
+                type="url" 
+                id="repo-url-input"
+                required 
+                placeholder="https://github.com/utilizador/nome-do-projeto"
+                class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-sm"
+              >
+            </div>
+            <button 
+              type="submit" 
+              id="analyze-submit-btn"
+              class="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-medium rounded-xl shadow-md shadow-indigo-100 flex items-center justify-center gap-2 transition-all cursor-pointer"
+            >
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <span>Analisar</span>
+            </button>
+          </form>
+
+          <!-- Loading State -->
+          <div id="analyze-loading" class="hidden mt-6 text-center py-6">
+            <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-indigo-600 border-t-transparent mb-2"></div>
+            <p class="text-slate-700 font-medium text-sm">A analisar o repositório com o Gemini...</p>
+            <p class="text-xs text-slate-500 mt-0.5">A gerar explicação simplificada em português</p>
+          </div>
+        </div>
+
+        <!-- Result Card Container -->
+        <div id="analysis-result-container" class="hidden">
+          <!-- Rendered dynamically by JavaScript -->
+        </div>
+      </div>
+
+      <!-- 3. SUBVIEW: CATÁLOGO DEDICADO -->
+      <div id="github-subview-catalog" class="github-subview hidden space-y-6">
+        <div class="flex items-center justify-between">
+          <button onclick="switchGitHubSubView('hub')" class="inline-flex items-center gap-1.5 text-xs font-medium text-slate-600 hover:text-indigo-600 transition-colors cursor-pointer bg-white px-3 py-1.5 rounded-lg border border-slate-200 shadow-2xs">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span>Voltar ao Painel GitHub</span>
+          </button>
+        </div>
+
+        <!-- Filters Bar -->
+        <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+            <!-- Category Filter -->
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-semibold text-slate-500 uppercase">Tipo:</span>
+              <select id="filter-category" onchange="loadHistory()" class="bg-slate-50 border border-slate-300 rounded-lg px-3 py-1.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <option value="">Todos os Tipos</option>
+              </select>
+            </div>
+
+            <!-- Sort Filter -->
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-semibold text-slate-500 uppercase">Ordenar:</span>
+              <select id="filter-sort-history" onchange="loadHistory()" class="bg-slate-50 border border-slate-300 rounded-lg px-3 py-1.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <option value="date-desc" selected>Mais Recentes Primeiro</option>
+                <option value="date-asc">Mais Antigos Primeiro</option>
+                <option value="name-asc">Nome (A - Z)</option>
+                <option value="name-desc">Nome (Z - A)</option>
+              </select>
+            </div>
+
+            <!-- Favorites Only Toggle -->
+            <button 
+              id="filter-favorites-btn" 
+              onclick="toggleFavoriteFilter()" 
+              class="px-3 py-1.5 rounded-lg border border-slate-300 bg-slate-50 text-slate-700 text-xs sm:text-sm hover:bg-slate-100 flex items-center gap-1.5 transition-all"
+            >
+              <i class="fa-regular fa-star text-amber-500"></i>
+              <span>Apenas Favoritos</span>
+            </button>
+          </div>
+
+          <div class="text-xs text-slate-500 font-medium" id="history-count">
+            0 repositórios guardados
+          </div>
+        </div>
+
+        <!-- History List -->
+        <div id="history-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- 4. SUBVIEW: NO COMPUTADOR DEDICADO -->
+      <div id="github-subview-local" class="github-subview hidden space-y-6">
+        <div class="flex items-center justify-between">
+          <button onclick="switchGitHubSubView('hub')" class="inline-flex items-center gap-1.5 text-xs font-medium text-slate-600 hover:text-indigo-600 transition-colors cursor-pointer bg-white px-3 py-1.5 rounded-lg border border-slate-200 shadow-2xs">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span>Voltar ao Painel GitHub</span>
+          </button>
+        </div>
+
+        <div class="bg-white rounded-2xl p-5 sm:p-6 border border-slate-200 shadow-sm">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center text-emerald-600 shrink-0">
+                <i class="fa-solid fa-folder-tree text-2xl"></i>
+              </div>
+              <div>
+                <h2 class="text-base sm:text-lg font-semibold text-slate-900">Projetos e Repositórios no Computador</h2>
+                <p class="text-xs sm:text-sm text-slate-600 mt-1">
+                  Faz um scan ao teu disco para detetar repositórios Git já instalados e importá-los para o teu catálogo com um clique.
+                </p>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 self-start sm:self-auto shrink-0">
+              <button 
+                onclick="handleScanLocalRepos()" 
+                id="btn-scan-local-repos"
+                class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-medium rounded-xl text-xs sm:text-sm shadow-sm shadow-indigo-100 flex items-center gap-2 transition-all cursor-pointer"
+              >
+                <i class="fa-solid fa-satellite-dish"></i>
+                <span>Fazer Scan ao PC</span>
+              </button>
+              <button 
+                onclick="handleChooseLocalScanFolder()" 
+                title="Escolher pasta para varrer"
+                class="px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-xl text-xs sm:text-sm border border-slate-200 flex items-center gap-1.5 transition-all cursor-pointer"
+              >
+                <i class="fa-regular fa-folder-open"></i>
+                <span>Alterar Pasta</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Scan Status Bar -->
+          <div id="local-scan-info-bar" class="hidden mt-4 pt-4 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+            <div class="flex items-center gap-2 text-slate-600">
+              <span class="font-medium text-slate-700">Pasta analisada:</span>
+              <code id="local-scan-folder-text" class="px-2 py-0.5 bg-slate-100 rounded text-slate-800 font-mono text-[11px] select-all"></code>
+            </div>
+            <span id="local-scan-count-text" class="font-medium text-indigo-600"></span>
+          </div>
+        </div>
+
+        <!-- Scan Results Section (Repositórios Encontrados no Disco) -->
+        <div id="local-scan-results-container" class="hidden">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-sm font-semibold text-slate-800 flex items-center gap-2">
+              <i class="fa-solid fa-hard-drive text-indigo-600"></i>
+              <span>Repositórios Detetados no Disco</span>
+            </h3>
+            <div class="flex items-center gap-3">
+              <span class="text-xs text-slate-500" id="local-scan-pending-count"></span>
+              <button 
+                id="btn-import-all" 
+                onclick="importAllScannedRepos()" 
+                class="hidden px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-medium rounded-lg text-xs shadow-sm flex items-center gap-1.5 transition-all cursor-pointer"
+              >
+                <i class="fa-solid fa-layer-group text-[11px]"></i>
+                <span>Adicionar Todos ao Catálogo</span>
+              </button>
+            </div>
+          </div>
+          <div id="local-scan-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- Cloned/Cataloged Repos List -->
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-sm font-semibold text-slate-700 flex items-center gap-2">
+              <i class="fa-solid fa-book-bookmark text-emerald-600"></i>
+              <span>Repositórios Catalogados no PC</span>
+            </h3>
+          </div>
+          <div id="local-repos-list" class="space-y-4">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. SUBVIEW: TENDÊNCIAS DEDICADO -->
+      <div id="github-subview-trending" class="github-subview hidden space-y-6">
+        <div class="flex items-center justify-between">
+          <button onclick="switchGitHubSubView('hub')" class="inline-flex items-center gap-1.5 text-xs font-medium text-slate-600 hover:text-indigo-600 transition-colors cursor-pointer bg-white px-3 py-1.5 rounded-lg border border-slate-200 shadow-2xs">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span>Voltar ao Painel GitHub</span>
+          </button>
+        </div>
+
+        <!-- SEÇÃO REPOSITÓRIOS EM ALTA (GITHUB TRENDING) -->
+        <div class="bg-white rounded-2xl p-5 sm:p-7 border border-slate-200 shadow-sm">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="w-8 h-8 rounded-lg bg-amber-50 text-amber-500 flex items-center justify-center font-bold text-base shadow-2xs">
+                  <i class="fa-solid fa-fire"></i>
+                </span>
+                <h3 class="text-base sm:text-lg font-bold text-slate-900">Em Alta no GitHub (Trending)</h3>
+                <span class="text-xs bg-amber-100 text-amber-800 font-semibold px-2 py-0.5 rounded-full">Hoje</span>
+              </div>
+              <p class="text-xs sm:text-sm text-slate-500 mt-1">
+                Os projetos com maior crescimento e popularidade a nível mundial nas últimas 24 horas. Clica em "Analisar com IA" para descomplicar qualquer um.
+              </p>
+            </div>
+
+            <div class="flex items-center gap-2 shrink-0">
+              <select 
+                id="trending-since-select" 
+                onchange="loadTrendingRepos()" 
+                class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 text-xs text-slate-700 font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              >
+                <option value="daily" selected>Em Alta Hoje</option>
+                <option value="weekly">Esta Semana</option>
+                <option value="monthly">Este Mês</option>
+              </select>
+              <button 
+                onclick="loadTrendingRepos(true)" 
+                title="Atualizar lista em alta"
+                class="p-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-600 hover:text-indigo-600 transition-colors cursor-pointer text-xs"
+              >
+                <i class="fa-solid fa-rotate" id="trending-refresh-icon"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Trending Grid -->
+          <div id="trending-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3.5 mt-5">
+            <div class="col-span-full py-8 text-center text-slate-400">
+              <div class="inline-block animate-spin rounded-full h-6 w-6 border-3 border-amber-500 border-t-transparent mb-2"></div>
+              <p class="text-xs">A carregar os repositórios em alta do GitHub...</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- SEÇÃO HUGGING FACE EM ALTA (MODELOS & IA) -->
+        <div class="bg-white rounded-2xl p-5 sm:p-7 border border-slate-200 shadow-sm">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="w-8 h-8 rounded-lg bg-yellow-50 text-yellow-600 flex items-center justify-center font-bold text-base shadow-2xs">
+                  🤗
+                </span>
+                <h3 class="text-base sm:text-lg font-bold text-slate-900">Em Alta no Hugging Face (Modelos de IA)</h3>
+                <span class="text-xs bg-yellow-100 text-yellow-800 font-semibold px-2 py-0.5 rounded-full">IA & LLMs</span>
+              </div>
+              <p class="text-xs sm:text-sm text-slate-500 mt-1">
+                Os modelos e aplicações interativas de Inteligência Artificial com maior destaque mundial no Hugging Face.
+              </p>
+            </div>
+
+            <div class="flex items-center gap-2 shrink-0">
+              <select 
+                id="hf-type-select" 
+                onchange="loadHuggingFaceTrending()" 
+                class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 text-xs text-slate-700 font-medium focus:outline-none focus:ring-2 focus:ring-yellow-500"
+              >
+                <option value="models" selected>Modelos de IA</option>
+                <option value="spaces">Aplicações (Spaces)</option>
+              </select>
+              <button 
+                onclick="loadHuggingFaceTrending(true)" 
+                title="Atualizar lista do Hugging Face"
+                class="p-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-600 hover:text-yellow-600 transition-colors cursor-pointer text-xs"
+              >
+                <i class="fa-solid fa-rotate" id="hf-refresh-icon"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Hugging Face Grid -->
+          <div id="hf-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3.5 mt-5">
+            <div class="col-span-full py-8 text-center text-slate-400">
+              <div class="inline-block animate-spin rounded-full h-6 w-6 border-3 border-yellow-500 border-t-transparent mb-2"></div>
+              <p class="text-xs">A carregar modelos em alta do Hugging Face...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. SUBVIEW: FACEBOOK & MÉDIA GUARDADA -->
+      <div id="github-subview-facebook" class="github-subview hidden space-y-6">
+        <div class="flex items-center justify-between">
+          <button onclick="switchGitHubSubView('hub')" class="inline-flex items-center gap-1.5 text-xs font-medium text-slate-600 hover:text-indigo-600 transition-colors cursor-pointer bg-white px-3 py-1.5 rounded-lg border border-slate-200 shadow-2xs">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span>Voltar ao Painel de Recursos</span>
+          </button>
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-50 text-sky-700 text-xs font-medium border border-sky-200">
+            <i class="fa-brands fa-apple text-sm"></i>
+            <span>Otimizado para iPhone & PC</span>
+          </div>
+        </div>
+
+        <!-- Banner & Formulário de Extração -->
+        <div class="bg-white rounded-2xl p-5 sm:p-7 border border-slate-200 shadow-sm space-y-4">
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <h2 class="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
+                <i class="fa-brands fa-facebook text-sky-600 text-xl"></i>
+                <span>Extrator de Conteúdo & Vídeos do Facebook</span>
+              </h2>
+              <p class="text-xs sm:text-sm text-slate-600 mt-1">
+                Copia qualquer link de vídeo ou publicação do Facebook no teu iPhone (ou computador), cola abaixo e deixa a IA extrair, resumir e organizar.
+              </p>
+            </div>
+          </div>
+
+          <form id="media-extract-form" onsubmit="handleProcessMedia(event)" class="space-y-3 pt-2">
+            <div class="flex flex-col sm:flex-row gap-2.5">
+              <div class="relative flex-1">
+                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                  <i class="fa-solid fa-link text-sm"></i>
+                </div>
+                <input 
+                  type="url" 
+                  id="media-url-input" 
+                  required 
+                  placeholder="https://www.facebook.com/watch/?v=... ou link de vídeo/post" 
+                  class="w-full pl-10 pr-24 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs sm:text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-sky-500 transition-all"
+                >
+                <button 
+                  type="button" 
+                  onclick="pasteMediaUrlFromClipboard()" 
+                  title="Colar da área de transferência do iPhone/PC"
+                  class="absolute inset-y-1 right-1 px-3 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
+                >
+                  <i class="fa-solid fa-paste"></i>
+                  <span>Colar</span>
+                </button>
+              </div>
+
+              <button 
+                type="submit" 
+                id="media-submit-btn" 
+                class="px-5 py-2.5 bg-sky-600 hover:bg-sky-500 text-white rounded-xl text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer whitespace-nowrap"
+              >
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                <span>Extrair & Resumir com IA</span>
+              </button>
+            </div>
+
+            <!-- Opções adicionais -->
+            <div class="flex items-center justify-between text-xs text-slate-600 pt-1">
+              <label class="inline-flex items-center gap-2 cursor-pointer select-none">
+                <input type="checkbox" id="media-download-toggle" checked class="rounded text-sky-600 focus:ring-sky-500 h-4 w-4">
+                <span>Descarregar vídeo para reproduzir sem gastar dados móveis</span>
+              </label>
+              <span class="text-[11px] text-slate-400 hidden sm:inline">Suporta Facebook, Instagram e YouTube</span>
+            </div>
+          </form>
+
+          <!-- Indicador de progresso de extração -->
+          <div id="media-progress-box" class="hidden p-4 rounded-xl bg-sky-50 border border-sky-200 text-sky-800 text-xs flex items-center gap-3">
+            <div class="inline-block animate-spin rounded-full h-5 w-5 border-2 border-sky-600 border-t-transparent"></div>
+            <div>
+              <p class="font-semibold" id="media-progress-title">A processar o link...</p>
+              <p class="text-[11px] text-sky-600" id="media-progress-detail">A extrair vídeo com yt-dlp e a gerar resumo com IA.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Barra de Filtros e Pesquisa da Média Guardada -->
+        <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs flex flex-col md:flex-row items-center justify-between gap-3">
+          <div class="relative w-full md:w-72">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+              <i class="fa-solid fa-magnifying-glass text-xs"></i>
+            </div>
+            <input 
+              type="text" 
+              id="media-search-input" 
+              oninput="filterMediaItems()" 
+              placeholder="Pesquisar nos vídeos guardados..." 
+              class="w-full pl-9 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-sky-500"
+            >
+          </div>
+
+          <div class="flex items-center gap-1.5 w-full md:w-auto overflow-x-auto pb-1 md:pb-0 text-xs">
+            <span class="text-slate-400 text-[11px] font-medium mr-1 shrink-0">Categorias:</span>
+            <button onclick="setMediaCategoryFilter('')" class="media-cat-pill active px-2.5 py-1 rounded-lg bg-sky-600 text-white font-medium shrink-0">Todas</button>
+            <button onclick="setMediaCategoryFilter('Jardinagem')" class="media-cat-pill px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 font-medium shrink-0">Jardinagem</button>
+            <button onclick="setMediaCategoryFilter('Piscinas')" class="media-cat-pill px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 font-medium shrink-0">Piscinas</button>
+            <button onclick="setMediaCategoryFilter('Tecnologia')" class="media-cat-pill px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 font-medium shrink-0">Tecnologia</button>
+            <button onclick="setMediaCategoryFilter('Humor')" class="media-cat-pill px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 font-medium shrink-0">Humor</button>
+            <button onclick="setMediaCategoryFilter('Geral')" class="media-cat-pill px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 font-medium shrink-0">Geral</button>
+          </div>
+        </div>
+
+        <!-- Grelha de Vídeos e Média Guardada -->
+        <div id="media-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div class="col-span-full py-12 text-center text-slate-400">
+            <div class="w-12 h-12 mx-auto rounded-full bg-slate-100 text-slate-400 flex items-center justify-center text-xl mb-3">
+              <i class="fa-brands fa-facebook"></i>
+            </div>
+            <p class="text-sm font-semibold text-slate-600">Ainda não tens vídeos guardados</p>
+            <p class="text-xs text-slate-400 mt-1">Copia um link do Facebook ou rede social no teu telemóvel e cola acima.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB: OS MEUS PROJETOS & CRIAÇÕES -->
+    <section id="tab-projects" class="tab-pane hidden space-y-6">
+      <!-- Top banner -->
+      <div class="bg-white rounded-2xl p-5 sm:p-6 border border-slate-200 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-base sm:text-lg font-semibold text-slate-900 flex items-center gap-2">
+            <i class="fa-solid fa-diagram-project text-indigo-600"></i>
+            <span>O Meu Espaço de Trabalho & Criações</span>
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-600 mt-1">
+            Gere os teus projetos de software no computador, os teus prompts personalizados e os teus skills configurados.
+          </p>
+        </div>
+      </div>
+
+      <!-- Projects Sub-tabs Navigation -->
+      <div class="flex items-center justify-between border-b border-slate-200 pb-2">
+        <div class="flex items-center gap-2 flex-wrap">
+          <button 
+            id="projects-subtab-code-btn" 
+            onclick="switchProjectsSubTab('code')" 
+            class="projects-subtab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-indigo-600 text-white shadow-xs cursor-pointer flex items-center gap-1.5"
+          >
+            <i class="fa-solid fa-laptop-code"></i>
+            <span>Projetos de Software</span>
+            <span id="my-projects-count-badge" class="ml-1 px-1.5 py-0.2 bg-white/20 text-white text-[11px] rounded-full">0</span>
+          </button>
+          <button 
+            id="projects-subtab-prompts-btn" 
+            onclick="switchProjectsSubTab('prompts')" 
+            class="projects-subtab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-slate-100 hover:bg-slate-200 text-slate-700 cursor-pointer flex items-center gap-1.5"
+          >
+            <i class="fa-solid fa-comment-dots text-emerald-600"></i>
+            <span>Os Meus Prompts</span>
+            <span id="my-prompts-count-badge" class="ml-1 px-1.5 py-0.2 bg-slate-200 text-slate-700 text-[11px] rounded-full">0</span>
+          </button>
+          <button 
+            id="projects-subtab-skills-btn" 
+            onclick="switchProjectsSubTab('skills')" 
+            class="projects-subtab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-slate-100 hover:bg-slate-200 text-slate-700 cursor-pointer flex items-center gap-1.5"
+          >
+            <i class="fa-solid fa-bolt text-amber-500"></i>
+            <span>Os Meus Skills</span>
+            <span id="my-skills-count-badge" class="ml-1 px-1.5 py-0.2 bg-slate-200 text-slate-700 text-[11px] rounded-full">0</span>
+          </button>
+        </div>
+
+        <button 
+          onclick="refreshCurrentProjectsSubTab()" 
+          title="Recarregar dados"
+          class="p-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-600 hover:text-indigo-600 transition-colors cursor-pointer text-xs"
+        >
+          <i class="fa-solid fa-rotate" id="projects-subtab-refresh-icon"></i>
+        </button>
+      </div>
+
+      <!-- 1. SUBVIEW: PROJETOS DE SOFTWARE -->
+      <div id="projects-subview-code" class="projects-subview space-y-6">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-semibold text-slate-500 uppercase">Estado:</span>
+              <select id="filter-project-status" onchange="loadMyProjects()" class="bg-white border border-slate-300 rounded-lg px-3 py-1.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <option value="">Todos os Estados</option>
+                <option value="em desenvolvimento">Em Desenvolvimento</option>
+                <option value="ativo">Ativo</option>
+                <option value="em pausa">Em Pausa</option>
+                <option value="concluído">Concluído</option>
+              </select>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-semibold text-slate-500 uppercase">Ordenar:</span>
+              <select id="filter-sort-projects" onchange="loadMyProjects()" class="bg-white border border-slate-300 rounded-lg px-3 py-1.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <option value="date-desc" selected>Mais Recentes Primeiro</option>
+                <option value="date-asc">Mais Antigos Primeiro</option>
+                <option value="name-asc">Nome (A - Z)</option>
+                <option value="name-desc">Nome (Z - A)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+            <span class="text-xs text-slate-500 font-medium" id="projects-count">0 projetos catalogados</span>
+            <button 
+              onclick="openAddProjectModal()" 
+              class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-medium rounded-xl text-xs sm:text-sm shadow-md shadow-indigo-100 flex items-center gap-2 transition-all shrink-0 cursor-pointer"
+            >
+              <i class="fa-solid fa-plus"></i>
+              <span>Adicionar Projeto Local</span>
+            </button>
+          </div>
+        </div>
+
+        <div id="projects-list" class="space-y-4">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- 2. SUBVIEW: OS MEUS PROMPTS -->
+      <div id="projects-subview-prompts" class="projects-subview hidden space-y-6">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+            <div class="relative min-w-[220px]">
+              <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-xs text-slate-400"></i>
+              <input 
+                type="text" 
+                id="my-prompts-search-input" 
+                oninput="filterMyWorkspacePrompts()" 
+                placeholder="Pesquisar nos meus prompts..." 
+                class="w-full pl-8 pr-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              >
+            </div>
+
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-semibold text-slate-500 uppercase">Modelo:</span>
+              <select id="my-prompts-filter-model" onchange="filterMyWorkspacePrompts()" class="bg-white border border-slate-300 rounded-lg px-3 py-1.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <option value="">Todos os Modelos</option>
+                <option value="ChatGPT">ChatGPT</option>
+                <option value="Claude">Claude</option>
+                <option value="Google Gemini">Google Gemini</option>
+                <option value="DeepSeek">DeepSeek</option>
+                <option value="Mistral AI">Mistral AI</option>
+                <option value="xAI Grok">xAI Grok</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+            <span class="text-xs text-slate-500 font-medium" id="my-prompts-status-count">0 prompts</span>
+            <button 
+              onclick="openCreatePromptModal()" 
+              class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-medium rounded-xl text-xs sm:text-sm shadow-md shadow-emerald-100 flex items-center gap-2 transition-all shrink-0 cursor-pointer"
+            >
+              <i class="fa-solid fa-plus"></i>
+              <span>Criar Novo Prompt</span>
+            </button>
+          </div>
+        </div>
+
+        <div id="my-prompts-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- 3. SUBVIEW: OS MEUS SKILLS -->
+      <div id="projects-subview-skills" class="projects-subview hidden space-y-6">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+            <div class="relative min-w-[220px]">
+              <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-xs text-slate-400"></i>
+              <input 
+                type="text" 
+                id="my-skills-search-input" 
+                oninput="filterMyWorkspaceSkills()" 
+                placeholder="Pesquisar nos meus skills..." 
+                class="w-full pl-8 pr-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              >
+            </div>
+
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-semibold text-slate-500 uppercase">Modelo:</span>
+              <select id="my-skills-filter-model" onchange="filterMyWorkspaceSkills()" class="bg-white border border-slate-300 rounded-lg px-3 py-1.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <option value="">Todos os Modelos</option>
+                <option value="Claude">Claude</option>
+                <option value="ChatGPT">ChatGPT</option>
+                <option value="Google Gemini">Google Gemini</option>
+                <option value="DeepSeek">DeepSeek</option>
+                <option value="Mistral AI">Mistral AI</option>
+                <option value="xAI Grok">xAI Grok</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+            <span class="text-xs text-slate-500 font-medium" id="my-skills-status-count">0 skills</span>
+            <button 
+              onclick="openCreateSkillModal()" 
+              class="px-4 py-2 bg-amber-600 hover:bg-amber-700 active:bg-amber-800 text-white font-medium rounded-xl text-xs sm:text-sm shadow-md shadow-amber-100 flex items-center gap-2 transition-all shrink-0 cursor-pointer"
+            >
+              <i class="fa-solid fa-plus"></i>
+              <span>Criar Novo Skill</span>
+            </button>
+          </div>
+        </div>
+
+        <div id="my-skills-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+    </section>
+
+
+    <!-- TAB 5: SKILLS INSTALADOS -->
+    <section id="tab-skills" class="tab-pane hidden">
+      <!-- Top banner & actions -->
+      <div class="bg-white rounded-2xl p-5 sm:p-6 border border-slate-200 shadow-sm mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-base sm:text-lg font-semibold text-slate-900 flex items-center gap-2">
+            <i class="fa-solid fa-bolt text-amber-500"></i>
+            <span>Catálogo de Skills Instalados</span>
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-600 mt-1">
+            Lista de capacidades especializadas configuradas no teu computador para o <strong>OpenCode</strong> e <strong>Google Antigravity</strong>.
+          </p>
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+          <button 
+            onclick="openCreateSkillModal()" 
+            class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-medium rounded-xl text-xs sm:text-sm shadow-md shadow-indigo-100 flex items-center gap-2 transition-all shrink-0 cursor-pointer"
+          >
+            <i class="fa-solid fa-plus"></i>
+            <span>Criar Novo Skill</span>
+          </button>
+          <button 
+            onclick="loadSkills(true)" 
+            title="Verificar novamente as pastas de skills"
+            class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-xl text-xs sm:text-sm border border-slate-200 flex items-center gap-1.5 transition-all shrink-0 cursor-pointer"
+          >
+            <i class="fa-solid fa-rotate"></i>
+            <span>Atualizar</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Filters & Search Bar -->
+      <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm mb-6 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4">
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 flex-1 flex-wrap">
+          <!-- Text search -->
+          <div class="relative flex-1 min-w-[200px]">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+              <i class="fa-solid fa-magnifying-glass text-xs"></i>
+            </div>
+            <input 
+              type="text" 
+              id="skills-search-input" 
+              oninput="handleSkillsFilter()" 
+              placeholder="Pesquisar por nome, descrição ou plugin..." 
+              class="w-full pl-8 pr-3 py-1.5 bg-slate-50 border border-slate-300 rounded-lg text-xs sm:text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            >
+          </div>
+
+          <!-- Model Filter -->
+          <div class="flex items-center gap-2 shrink-0">
+            <span class="text-xs font-semibold text-slate-500 uppercase">Modelo:</span>
+            <select id="filter-skill-model" onchange="handleSkillsFilter()" class="bg-slate-50 border border-slate-300 rounded-lg px-3 py-1.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="">Todos os Modelos</option>
+              <option value="Claude">Claude</option>
+              <option value="ChatGPT">ChatGPT</option>
+              <option value="Google Gemini">Google Gemini</option>
+              <option value="DeepSeek">DeepSeek</option>
+              <option value="Mistral AI">Mistral AI</option>
+              <option value="xAI Grok">xAI Grok</option>
+            </select>
+          </div>
+
+          <!-- Program Filter -->
+          <div class="flex items-center gap-2 shrink-0">
+            <span class="text-xs font-semibold text-slate-500 uppercase">Programa:</span>
+            <select id="filter-skill-program" onchange="handleSkillsFilter()" class="bg-slate-50 border border-slate-300 rounded-lg px-3 py-1.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="">Todos os Programas</option>
+              <option value="OpenCode">OpenCode</option>
+              <option value="Google Antigravity">Google Antigravity</option>
+            </select>
+          </div>
+
+          <!-- Source / Plugin Filter -->
+          <div class="flex items-center gap-2 shrink-0">
+            <span class="text-xs font-semibold text-slate-500 uppercase">Origem:</span>
+            <select id="filter-skill-source" onchange="handleSkillsFilter()" class="bg-slate-50 border border-slate-300 rounded-lg px-3 py-1.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 max-w-[200px]">
+              <option value="">Todas as Origens</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="text-xs text-slate-500 font-medium shrink-0" id="skills-count">
+          A carregar skills...
+        </div>
+      </div>
+
+      <!-- Skills Grid -->
+      <div id="skills-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Dynamically populated -->
+      </div>
+    </section>
+
+    <!-- TAB 6: PROMPTS (BIBLIOTECA & PROMPTS.CHAT) -->
+    <section id="tab-prompts" class="tab-pane hidden">
+      <!-- Top banner & actions -->
+      <div class="bg-white rounded-2xl p-5 sm:p-6 border border-slate-200 shadow-sm mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-base sm:text-lg font-semibold text-slate-900 flex items-center gap-2">
+            <i class="fa-solid fa-comment-dots text-indigo-600"></i>
+            <span>Biblioteca de Prompts & Comunidade</span>
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-600 mt-1">
+            Explora centenas de ideias e papéis populares do <strong>prompts.chat</strong> ou cria e organiza os teus próprios prompts personalizados.
+          </p>
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+          <button 
+            onclick="openCreatePromptModal()" 
+            class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-medium rounded-xl text-xs sm:text-sm shadow-md shadow-indigo-100 flex items-center gap-2 transition-all cursor-pointer"
+          >
+            <i class="fa-solid fa-plus"></i>
+            <span>Criar Novo Prompt</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Prompts Sub-tabs (Minha Biblioteca vs prompts.chat) -->
+      <div class="flex items-center justify-between border-b border-slate-200 pb-2 mb-6">
+        <div class="flex items-center gap-2">
+          <button 
+            id="prompts-subtab-library-btn" 
+            onclick="switchPromptsSubTab('library')" 
+            class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-indigo-600 text-white shadow-xs cursor-pointer flex items-center gap-1.5"
+          >
+            <i class="fa-solid fa-bookmark"></i>
+            <span>A Minha Biblioteca</span>
+            <span id="prompts-my-count-badge" class="ml-1 px-1.5 py-0.2 bg-white/20 text-white text-[11px] rounded-full">0</span>
+          </button>
+          <button 
+            id="prompts-subtab-community-btn" 
+            onclick="switchPromptsSubTab('community')" 
+            class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-slate-100 hover:bg-slate-200 text-slate-700 cursor-pointer flex items-center gap-1.5"
+          >
+            <i class="fa-solid fa-globe text-indigo-500"></i>
+            <span>prompts.chat (Comunidade)</span>
+          </button>
+        </div>
+
+        <button 
+          id="prompts-refresh-btn" 
+          onclick="refreshCurrentPromptsSubTab()" 
+          title="Recarregar prompts"
+          class="p-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-600 hover:text-indigo-600 text-xs transition-colors cursor-pointer"
+        >
+          <i class="fa-solid fa-rotate" id="prompts-refresh-icon"></i>
+        </button>
+      </div>
+
+      <!-- SUB-TAB 1: A MINHA BIBLIOTECA -->
+      <div id="prompts-subtab-library">
+        <!-- Search & Filter bar -->
+        <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm mb-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto flex-1">
+            <div class="relative flex-1 min-w-[200px]">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                <i class="fa-solid fa-magnifying-glass text-xs"></i>
+              </div>
+              <input 
+                type="text" 
+                id="my-prompts-search" 
+                oninput="loadMyPrompts()" 
+                placeholder="Pesquisar nos teus prompts..." 
+                class="w-full pl-8 pr-3 py-1.5 bg-slate-50 border border-slate-300 rounded-lg text-xs sm:text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              >
+            </div>
+
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-semibold text-slate-500 uppercase">Ordenar:</span>
+              <select id="my-prompts-sort" onchange="loadMyPrompts()" class="bg-slate-50 border border-slate-300 rounded-lg px-3 py-1.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <option value="date-desc" selected>Mais Recentes</option>
+                <option value="date-asc">Mais Antigos</option>
+                <option value="name-asc">Título (A - Z)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="text-xs text-slate-500 font-medium shrink-0" id="my-prompts-count-text">
+            0 prompts guardados
+          </div>
+        </div>
+
+        <!-- My Prompts Grid -->
+        <div id="my-prompts-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- SUB-TAB 2: PROMPTS.CHAT (COMUNIDADE) -->
+      <div id="prompts-subtab-community" class="hidden">
+        <!-- Search & Info banner -->
+        <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm mb-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="relative flex-1 w-full sm:w-auto">
+            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+              <i class="fa-solid fa-magnifying-glass text-xs"></i>
+            </div>
+            <input 
+              type="text" 
+              id="community-prompts-search" 
+              oninput="debounceCommunitySearch()" 
+              placeholder="Pesquisar por papel/tema (ex: Linux, Python, Escritor, Excel)..." 
+              class="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs sm:text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            >
+          </div>
+
+          <div class="text-xs text-slate-500 font-medium shrink-0" id="community-prompts-count-text">
+            A carregar prompts da comunidade...
+          </div>
+        </div>
+
+        <!-- Categorias para Escolher (Chips / Pills com contadores) -->
+        <div class="bg-white rounded-2xl p-3 sm:p-4 border border-slate-200 shadow-sm mb-6">
+          <div class="flex items-center justify-between mb-2 px-1">
+            <span class="text-xs font-semibold text-slate-600 uppercase tracking-wide flex items-center gap-1.5">
+              <i class="fa-solid fa-layer-group text-indigo-600 text-xs"></i>
+              <span>Filtrar por Categoria:</span>
+            </span>
+            <span class="text-[11px] text-slate-400">Clica para filtrar</span>
+          </div>
+          <div id="community-categories-container" class="flex flex-wrap gap-1.5 max-h-32 overflow-y-auto pr-1">
+            <button 
+              type="button"
+              onclick="selectCommunityCategory('all')" 
+              id="comm-cat-all" 
+              class="comm-cat-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition-all bg-indigo-600 text-white shadow-2xs cursor-pointer flex items-center gap-1.5"
+            >
+              <i class="fa-solid fa-border-all text-[10px]"></i>
+              <span>Todas as Categorias</span>
+            </button>
+            <!-- Dynamic Category Chips -->
+          </div>
+        </div>
+
+        <!-- Community Prompts Grid -->
+        <div id="community-prompts-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- QR Code Modal (Ligar ao iPhone) -->
+  <div id="qr-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-sm w-full text-center shadow-2xl border border-slate-100 relative">
+      <button onclick="closeQrModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-lg p-2">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="w-12 h-12 bg-indigo-100 rounded-2xl flex items-center justify-center text-indigo-600 mx-auto mb-3">
+        <i class="fa-solid fa-mobile-screen-button text-2xl"></i>
+      </div>
+
+      <h3 class="text-lg font-bold text-slate-900 mb-1">Abrir no iPhone</h3>
+      <p class="text-xs text-slate-500 mb-4">
+        Garante que o teu iPhone está ligado ao mesmo Wi-Fi do computador e aponta a câmara para o código:
+      </p>
+
+      <div id="qrcode-box" class="flex justify-center p-4 bg-slate-50 rounded-2xl border border-slate-200 mb-4 mx-auto w-fit"></div>
+
+      <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs font-mono text-slate-700 mb-4 break-all select-all" id="qr-url-text">
+        A carregar endereço...
+      </div>
+
+      <div class="text-left text-xs text-slate-600 space-y-1.5 bg-indigo-50/60 p-3.5 rounded-xl border border-indigo-100">
+        <p class="font-semibold text-indigo-900"><i class="fa-solid fa-wifi text-indigo-600 mr-1"></i> No mesmo Wi-Fi:</p>
+        <p>Basta apontar a câmara ao QR code acima ou abrir o endereço local.</p>
+        <div class="pt-2 border-t border-indigo-200/60">
+          <p class="font-semibold text-indigo-900"><i class="fa-solid fa-globe text-emerald-600 mr-1"></i> Fora de casa (Wi-Fi diferente / 4G):</p>
+          <p>Executa o ficheiro <code class="px-1.5 py-0.5 rounded bg-white font-mono text-[11px] text-indigo-700 border border-indigo-200">Ativar Acesso Remoto.bat</code> na pasta da Toolbox para gerar um link seguro HTTPS acessível em qualquer lugar!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Adicionar Projeto Local -->
+  <div id="add-project-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-xl w-full shadow-2xl border border-slate-100 relative max-h-[90vh] overflow-y-auto">
+      <button onclick="closeAddProjectModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-lg p-2">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center text-indigo-600 shrink-0">
+          <i class="fa-solid fa-folder-plus text-xl"></i>
+        </div>
+        <div>
+          <h3 class="text-lg font-bold text-slate-900">Adicionar Projeto Local</h3>
+          <p class="text-xs text-slate-500">Indica a pasta no computador para catalogar e analisar</p>
+        </div>
+      </div>
+
+      <!-- Step 1: Caminho da Pasta -->
+      <div class="space-y-3 mb-4">
+        <label class="block text-xs font-semibold text-slate-700">Caminho da Pasta no PC</label>
+        <div class="flex flex-col sm:flex-row gap-2">
+          <input 
+            type="text" 
+            id="proj-scan-path" 
+            placeholder="Ex: D:\AI Projects\O-Meu-Projeto" 
+            class="flex-1 px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono text-xs sm:text-sm"
+          >
+          <div class="flex items-center gap-2 shrink-0">
+            <button 
+              type="button" 
+              id="proj-browse-btn" 
+              onclick="toggleFolderTreeBrowser()" 
+              title="Explorar pastas no computador instantaneamente"
+              class="px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-700 font-medium text-xs sm:text-sm rounded-xl flex items-center gap-1.5 transition-all cursor-pointer border border-slate-300"
+            >
+              <i class="fa-solid fa-folder-tree text-indigo-600"></i>
+              <span>Explorar Pastas</span>
+            </button>
+            <button 
+              type="button" 
+              id="proj-scan-btn" 
+              onclick="handleScanFolder()" 
+              class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-medium text-xs sm:text-sm rounded-xl flex items-center gap-1.5 transition-all cursor-pointer shadow-sm"
+            >
+              <i class="fa-solid fa-wand-magic-sparkles"></i>
+              <span>Analisar</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Explorador de Pastas Embutido (0ms latência) -->
+        <div id="in-app-tree-browser" class="hidden mt-3 p-3.5 bg-slate-50 rounded-2xl border border-indigo-200 shadow-inner">
+          <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-200">
+            <div class="flex items-center gap-1 text-xs font-mono text-slate-700 truncate" id="tree-current-path-display">
+              <i class="fa-solid fa-folder text-amber-500"></i>
+              <span id="tree-path-text" class="font-bold">D:\AI Projects</span>
+            </div>
+            <div class="flex items-center gap-1.5 shrink-0" id="tree-drives-list">
+              <!-- Drive buttons: C:, D: -->
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2 mb-2">
+            <button 
+              type="button" 
+              id="tree-up-btn" 
+              onclick="navigateFolderTree('up')" 
+              class="px-2.5 py-1 bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-lg text-xs font-medium flex items-center gap-1 transition-colors cursor-pointer"
+            >
+              <i class="fa-solid fa-arrow-turn-up text-[10px]"></i>
+              <span>Pasta Acima</span>
+            </button>
+            <span class="text-[11px] text-slate-400">Clica numa pasta para navegar ou no visto para escolher</span>
+          </div>
+
+          <div id="tree-folder-list" class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 max-h-48 overflow-y-auto pr-1">
+            <!-- Dynamic subfolders -->
+          </div>
+        </div>
+
+        <!-- Seleção Rápida de Pastas em D:\AI Projects -->
+        <div id="quick-folders-container" class="mt-2.5 p-3 bg-slate-50 rounded-xl border border-slate-200">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[11px] font-semibold text-slate-600 uppercase tracking-wide flex items-center gap-1.5">
+              <i class="fa-solid fa-bolt text-amber-500 text-xs"></i>
+              <span>Projetos detetados em D:\AI Projects:</span>
+            </span>
+            <span class="text-[10px] text-slate-400">Clica para preencher</span>
+          </div>
+          <div id="quick-folders-chips" class="flex flex-wrap gap-1.5 max-h-32 overflow-y-auto pr-1">
+            <span class="text-xs text-slate-400 py-1">A carregar pastas...</span>
+          </div>
+        </div>
+
+        <p class="text-[11px] text-slate-400">
+          Clica num dos projetos acima, usa <strong>Explorar Pastas</strong> para navegar instantaneamente no disco, ou escreve o caminho diretamente.
+        </p>
+
+        <!-- Loading spinner -->
+        <div id="proj-scan-loading" class="hidden py-4 text-center">
+          <div class="inline-block animate-spin rounded-full h-6 w-6 border-2 border-indigo-600 border-t-transparent mb-1"></div>
+          <p class="text-xs font-medium text-slate-700">A analisar pasta e a resumir código com IA...</p>
+        </div>
+      </div>
+
+      <!-- Step 2: Detalhes do Projeto Detetado (Preenchido após scan) -->
+      <div id="proj-modal-details" class="hidden space-y-4 pt-4 border-t border-slate-100">
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Nome do Projeto</label>
+          <input 
+            type="text" 
+            id="proj-modal-name" 
+            class="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-semibold"
+          >
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Estado</label>
+            <select id="proj-modal-status" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="em desenvolvimento">Em Desenvolvimento</option>
+              <option value="ativo">Ativo</option>
+              <option value="em pausa">Em Pausa</option>
+              <option value="concluído">Concluído</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Tecnologias (separadas por vírgula)</label>
+            <input 
+              type="text" 
+              id="proj-modal-techs" 
+              placeholder="Ex: Python, FastAPI, React" 
+              class="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            >
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Resumo do Projeto (gerado por IA / README)</label>
+          <textarea 
+            id="proj-modal-summary" 
+            rows="3" 
+            class="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs sm:text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          ></textarea>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Notas Pessoais (opcional)</label>
+          <textarea 
+            id="proj-modal-notes" 
+            rows="2" 
+            placeholder="Ex: Ideias para adicionar, tarefas pendentes, etc."
+            class="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs sm:text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          ></textarea>
+        </div>
+
+        <!-- Repositórios Internos Encontrados -->
+        <div id="proj-modal-internal-repos-container" class="hidden p-3.5 rounded-xl bg-amber-50 border border-amber-200">
+          <div class="flex items-center gap-2 mb-2 text-amber-900 font-semibold text-xs">
+            <i class="fa-solid fa-triangle-exclamation text-amber-600"></i>
+            <span>Repositórios Git internos detetados nesta pasta:</span>
+          </div>
+          <p class="text-[11px] text-amber-800 mb-2">
+            Identificámos pastas Git que ainda não tens na tua lista. Seleciona as que queres catalogar também:
+          </p>
+          <div id="proj-modal-internal-repos-list" class="space-y-1.5 text-xs text-slate-800">
+            <!-- Checkboxes dinamicos -->
+          </div>
+        </div>
+
+        <!-- Ações do Modal -->
+        <div class="flex items-center justify-end gap-2 pt-3">
+          <button 
+            type="button" 
+            onclick="closeAddProjectModal()" 
+            class="px-4 py-2 border border-slate-300 hover:bg-slate-50 rounded-xl text-xs sm:text-sm font-medium text-slate-700 transition-colors"
+          >
+            Cancelar
+          </button>
+          <button 
+            type="button" 
+            id="proj-modal-save-btn" 
+            onclick="handleSaveProject()" 
+            class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs sm:text-sm font-medium shadow-md shadow-indigo-100 flex items-center gap-1.5 transition-all cursor-pointer"
+          >
+            <i class="fa-solid fa-check"></i>
+            <span>Gravar Projeto</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Detalhes do Skill -->
+  <div id="skill-detail-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-3xl w-full shadow-2xl border border-slate-100 relative max-h-[90vh] flex flex-col">
+      <button onclick="closeSkillDetailModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-lg p-2">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="flex items-start gap-3 mb-4 pb-4 border-b border-slate-100 pr-8">
+        <div class="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center text-amber-600 shrink-0">
+          <i class="fa-solid fa-bolt text-xl"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2 flex-wrap">
+            <h3 id="skill-modal-title" class="text-lg font-bold text-slate-900">Nome do Skill</h3>
+            <span id="skill-modal-program" class="text-xs font-semibold px-2.5 py-0.5 rounded-full">Programa</span>
+            <span id="skill-modal-source" class="text-[11px] font-medium bg-slate-100 text-slate-600 px-2 py-0.5 rounded">Origem</span>
+          </div>
+          <p id="skill-modal-path" class="text-[11px] text-slate-500 font-mono mt-1 select-all break-all"></p>
+        </div>
+      </div>
+
+      <!-- Content scrollable -->
+      <div class="flex-1 overflow-y-auto pr-1">
+        <div id="skill-modal-loading" class="text-center py-12 hidden">
+          <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-indigo-600 border-t-transparent mb-2"></div>
+          <p class="text-xs text-slate-500">A carregar instruções do skill...</p>
+        </div>
+        <pre id="skill-modal-content" class="bg-slate-50 p-4 rounded-xl text-xs sm:text-sm text-slate-800 font-mono whitespace-pre-wrap leading-relaxed border border-slate-200 select-text"></pre>
+      </div>
+
+      <div class="flex items-center justify-end pt-4 border-t border-slate-100 mt-4">
+        <button 
+          onclick="closeSkillDetailModal()" 
+          class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs sm:text-sm font-medium transition-colors cursor-pointer"
+        >
+          Fechar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Global Search / Command Palette Modal (Ctrl+K) -->
+  <div id="global-search-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-start justify-center p-3 sm:p-6 pt-12 sm:pt-20 hidden" onclick="handleSearchBackdropClick(event)">
+    <div class="bg-white rounded-2xl sm:rounded-3xl max-w-2xl w-full shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[80vh] animate-in fade-in zoom-in duration-150">
+      
+      <!-- Search Input Header -->
+      <div class="p-3 sm:p-4 border-b border-slate-200 flex items-center gap-3 bg-slate-50/50">
+        <i class="fa-solid fa-magnifying-glass text-indigo-600 text-base sm:text-lg pl-1"></i>
+        <input 
+          type="text" 
+          id="global-search-input" 
+          placeholder="Pesquisar repositórios, projetos ou skills... (ex: bot, python, web)"
+          class="flex-1 bg-transparent text-sm sm:text-base text-slate-800 placeholder-slate-400 focus:outline-none"
+          autocomplete="off"
+        />
+        <kbd class="hidden sm:inline-block px-2 py-1 text-[11px] font-mono text-slate-400 bg-white border border-slate-200 rounded-lg shadow-2xs">ESC</kbd>
+        <button onclick="closeGlobalSearch()" class="sm:hidden text-slate-400 hover:text-slate-600 p-1">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Quick Filter Pills -->
+      <div class="px-3 sm:px-4 py-2 border-b border-slate-100 flex items-center gap-2 overflow-x-auto text-xs bg-white">
+        <span class="text-[11px] text-slate-400 uppercase font-semibold tracking-wider shrink-0">Filtrar:</span>
+        <button onclick="setSearchFilter('all')" id="search-filter-all" class="px-2.5 py-1 rounded-lg font-medium text-indigo-700 bg-indigo-50 border border-indigo-200 shrink-0">Tudo</button>
+        <button onclick="setSearchFilter('repos')" id="search-filter-repos" class="px-2.5 py-1 rounded-lg font-medium text-slate-600 hover:bg-slate-100 border border-transparent shrink-0">Repositórios</button>
+        <button onclick="setSearchFilter('projects')" id="search-filter-projects" class="px-2.5 py-1 rounded-lg font-medium text-slate-600 hover:bg-slate-100 border border-transparent shrink-0">Meus Projetos</button>
+        <button onclick="setSearchFilter('skills')" id="search-filter-skills" class="px-2.5 py-1 rounded-lg font-medium text-slate-600 hover:bg-slate-100 border border-transparent shrink-0">Skills</button>
+      </div>
+
+      <!-- Search Results List -->
+      <div id="global-search-results" class="flex-1 overflow-y-auto p-2 sm:p-3 divide-y divide-slate-100 min-h-[160px] max-h-[55vh]">
+        <!-- Populated dynamically by app.js -->
+      </div>
+
+      <!-- Footer Help -->
+      <div class="px-4 py-2.5 bg-slate-50 border-t border-slate-200 text-[11px] text-slate-500 flex items-center justify-between">
+        <span class="flex items-center gap-3">
+          <span><kbd class="px-1 py-0.5 bg-white border border-slate-200 rounded text-[10px]">Enter</kbd> para selecionar</span>
+          <span><kbd class="px-1 py-0.5 bg-white border border-slate-200 rounded text-[10px]">Esc</kbd> para fechar</span>
+        </span>
+        <span id="global-search-count" class="font-medium text-slate-600">0 resultados</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Criar / Editar Prompt -->
+  <div id="prompt-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-xl w-full shadow-2xl border border-slate-100 relative max-h-[90vh] overflow-y-auto">
+      <button onclick="closePromptModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-lg p-2">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center">
+          <i class="fa-solid fa-comment-dots text-lg"></i>
+        </div>
+        <div>
+          <h3 class="text-base sm:text-lg font-bold text-slate-900" id="prompt-modal-title">Criar Novo Prompt</h3>
+          <p class="text-xs text-slate-500">Guarda instruções que podes reutilizar no ChatGPT, Claude ou OpenCode.</p>
+        </div>
+      </div>
+
+      <input type="hidden" id="prompt-modal-id" value="">
+
+      <div class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Título / Papel do Prompt</label>
+          <input 
+            type="text" 
+            id="prompt-modal-act" 
+            placeholder="Ex: Assistente de Jardinagem, Programador Python, Revisor de Texto..." 
+            class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium"
+          >
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Categoria</label>
+            <input 
+              type="text" 
+              id="prompt-modal-category" 
+              placeholder="Ex: Desenvolvimento, Jardinagem, Línguas..." 
+              class="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs sm:text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            >
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Modelo Otimizado</label>
+            <select id="prompt-modal-target-model" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="ChatGPT (OpenAI)">ChatGPT (OpenAI)</option>
+              <option value="Claude (Anthropic)">Claude (Anthropic)</option>
+              <option value="Google Gemini">Google Gemini</option>
+              <option value="DeepSeek">DeepSeek</option>
+              <option value="Meta Llama">Meta Llama</option>
+              <option value="Mistral AI">Mistral AI</option>
+              <option value="xAI Grok">xAI Grok</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Texto do Prompt</label>
+          <textarea 
+            id="prompt-modal-text" 
+            rows="6" 
+            placeholder="Escreve aqui a instrução ou prompt completo..." 
+            class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs sm:text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono leading-relaxed"
+          ></textarea>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+          <button 
+            type="button" 
+            onclick="closePromptModal()" 
+            class="px-4 py-2 border border-slate-300 hover:bg-slate-50 rounded-xl text-xs sm:text-sm font-medium text-slate-700 transition-colors"
+          >
+            Cancelar
+          </button>
+          <button 
+            type="button" 
+            id="prompt-modal-save-btn" 
+            onclick="handleSavePromptModal()" 
+            class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white rounded-xl text-xs sm:text-sm font-medium shadow-md shadow-indigo-100 flex items-center gap-1.5 transition-all cursor-pointer"
+          >
+            <i class="fa-solid fa-check"></i>
+            <span>Gravar Prompt</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Detalhes / Descrição do Prompt (?) -->
+  <div id="prompt-info-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl p-6 sm:p-7 max-w-lg w-full shadow-2xl border border-slate-100 relative max-h-[85vh] overflow-y-auto animate-in fade-in zoom-in duration-150">
+      <button onclick="closePromptInfoModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-lg p-2">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
+          <i class="fa-solid fa-circle-question text-xl"></i>
+        </div>
+        <div>
+          <h3 class="text-base sm:text-lg font-bold text-slate-900" id="prompt-info-title">Descrição do Prompt</h3>
+          <div class="flex items-center gap-2 mt-0.5">
+            <span class="text-xs text-indigo-600 font-medium" id="prompt-info-category">Geral</span>
+            <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200" id="prompt-info-model">ChatGPT</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-4">
+        <div class="p-4 bg-indigo-50/70 border border-indigo-100 rounded-2xl">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-indigo-900 mb-1.5 flex items-center gap-1.5">
+            <i class="fa-solid fa-bullseye text-indigo-600"></i>
+            <span>Para que serve este prompt:</span>
+          </h4>
+          <p class="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium" id="prompt-info-purpose">
+            <!-- Populated by JS -->
+          </p>
+        </div>
+
+        <div>
+          <h4 class="text-xs font-semibold text-slate-600 uppercase tracking-wide mb-1.5 flex items-center gap-1.5">
+            <i class="fa-solid fa-align-left text-slate-400"></i>
+            <span>Como instrui a IA:</span>
+          </h4>
+          <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-600 font-mono leading-relaxed max-h-44 overflow-y-auto select-all whitespace-pre-wrap" id="prompt-info-preview">
+            <!-- Full prompt text -->
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-slate-100 text-xs">
+          <span class="text-slate-400" id="prompt-info-chars">0 caracteres</span>
+          <div class="flex items-center gap-2">
+            <button 
+              type="button" 
+              onclick="convertFromInfoModal()" 
+              class="px-3.5 py-2 bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-white rounded-xl font-medium text-xs flex items-center gap-1.5 shadow-xs transition-all cursor-pointer"
+              title="Converter ou otimizar para outro modelo de IA"
+            >
+              <i class="fa-solid fa-arrows-rotate"></i>
+              <span>Converter</span>
+            </button>
+            <button 
+              type="button" 
+              onclick="copyPromptInfoModal()" 
+              class="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white rounded-xl font-medium text-xs flex items-center gap-1.5 shadow-xs transition-all cursor-pointer"
+            >
+              <i class="fa-regular fa-copy"></i>
+              <span>Copiar Prompt</span>
+            </button>
+            <button 
+              type="button" 
+              onclick="closePromptInfoModal()" 
+              class="px-3 py-2 border border-slate-200 hover:bg-slate-50 rounded-xl font-medium text-xs text-slate-600 transition-colors"
+            >
+              Fechar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Converter Prompt para Outro Modelo -->
+  <div id="prompt-convert-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl p-6 sm:p-7 max-w-xl w-full shadow-2xl border border-slate-100 relative max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-150">
+      <button onclick="closeConvertPromptModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-lg p-2">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
+          <i class="fa-solid fa-arrows-rotate text-xl"></i>
+        </div>
+        <div>
+          <h3 class="text-base sm:text-lg font-bold text-slate-900">Converter / Otimizar Prompt</h3>
+          <p class="text-xs text-slate-500" id="prompt-convert-subtitle">Adapta a estrutura e técnicas ao modelo escolhido</p>
+        </div>
+      </div>
+
+      <!-- Hidden inputs for current prompt state -->
+      <input type="hidden" id="convert-prompt-act" value="">
+      <input type="hidden" id="convert-prompt-category" value="">
+      <input type="hidden" id="convert-prompt-current-model" value="">
+      <input type="hidden" id="convert-prompt-original-text" value="">
+      <input type="hidden" id="convert-prompt-selected-target" value="Claude (Anthropic)">
+
+      <!-- Current Prompt Summary Box -->
+      <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-2xl mb-4">
+        <div class="flex items-center justify-between mb-1.5">
+          <span class="text-xs font-bold text-slate-800" id="convert-prompt-title">Título do Prompt</span>
+          <span class="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-slate-200 text-slate-700" id="convert-prompt-current-badge">ChatGPT</span>
+        </div>
+        <p class="text-xs text-slate-600 line-clamp-2 font-mono" id="convert-prompt-preview-snippet"></p>
+      </div>
+
+      <!-- Target Model Selection -->
+      <div class="mb-4">
+        <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">Escolhe o Modelo de Destino:</label>
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2" id="convert-model-options">
+          <button type="button" onclick="selectConvertTargetModel('Claude (Anthropic)')" class="convert-model-btn p-2.5 rounded-xl border-2 border-indigo-600 bg-indigo-50/40 text-left transition-all cursor-pointer flex flex-col gap-1" data-model="Claude (Anthropic)">
+            <span class="text-xs font-bold text-amber-800 flex items-center gap-1.5">
+              <i class="fa-solid fa-brain text-[11px]"></i> Claude
+            </span>
+            <span class="text-[10px] text-slate-500">Tags XML, raciocínio detalhado</span>
+          </button>
+          <button type="button" onclick="selectConvertTargetModel('Google Gemini')" class="convert-model-btn p-2.5 rounded-xl border border-slate-200 hover:border-blue-400 bg-white text-left transition-all cursor-pointer flex flex-col gap-1" data-model="Google Gemini">
+            <span class="text-xs font-bold text-blue-700 flex items-center gap-1.5">
+              <i class="fa-solid fa-sparkles text-[11px]"></i> Gemini
+            </span>
+            <span class="text-[10px] text-slate-500">Markdown claro e contextual</span>
+          </button>
+          <button type="button" onclick="selectConvertTargetModel('DeepSeek')" class="convert-model-btn p-2.5 rounded-xl border border-slate-200 hover:border-purple-400 bg-white text-left transition-all cursor-pointer flex flex-col gap-1" data-model="DeepSeek">
+            <span class="text-xs font-bold text-purple-700 flex items-center gap-1.5">
+              <i class="fa-solid fa-code text-[11px]"></i> DeepSeek
+            </span>
+            <span class="text-[10px] text-slate-500">R1 Chain-of-Thought e lógica</span>
+          </button>
+          <button type="button" onclick="selectConvertTargetModel('ChatGPT (OpenAI)')" class="convert-model-btn p-2.5 rounded-xl border border-slate-200 hover:border-emerald-400 bg-white text-left transition-all cursor-pointer flex flex-col gap-1" data-model="ChatGPT (OpenAI)">
+            <span class="text-xs font-bold text-emerald-700 flex items-center gap-1.5">
+              <i class="fa-solid fa-robot text-[11px]"></i> ChatGPT
+            </span>
+            <span class="text-[10px] text-slate-500">Personas, contexto e tom</span>
+          </button>
+          <button type="button" onclick="selectConvertTargetModel('Meta Llama')" class="convert-model-btn p-2.5 rounded-xl border border-slate-200 hover:border-sky-400 bg-white text-left transition-all cursor-pointer flex flex-col gap-1 col-span-2 sm:col-span-1" data-model="Meta Llama">
+            <span class="text-xs font-bold text-sky-700 flex items-center gap-1.5">
+              <i class="fa-solid fa-microchip text-[11px]"></i> Meta Llama
+            </span>
+            <span class="text-[10px] text-slate-500">Diretrizes explícitas e concisas</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Convert Action Button -->
+      <div class="mb-4">
+        <button 
+          type="button" 
+          id="btn-execute-conversion" 
+          onclick="handleExecutePromptConversion()" 
+          class="w-full py-2.5 bg-gradient-to-r from-amber-500 to-indigo-600 hover:from-amber-600 hover:to-indigo-700 active:from-amber-700 active:to-indigo-800 text-white font-semibold rounded-xl text-xs sm:text-sm shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer"
+        >
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+          <span id="btn-execute-conversion-text">Converter Agora com IA</span>
+        </button>
+      </div>
+
+      <!-- Loading State -->
+      <div id="convert-loading-state" class="hidden py-8 text-center space-y-2">
+        <i class="fa-solid fa-circle-notch fa-spin text-2xl text-amber-500"></i>
+        <p class="text-xs text-slate-600 font-medium">A otimizar o prompt para o modelo escolhido...</p>
+      </div>
+
+      <!-- Converted Result Box -->
+      <div id="convert-result-box" class="hidden space-y-3 pt-2 border-t border-slate-100">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+            <i class="fa-solid fa-circle-check text-emerald-500"></i>
+            <span>Resultado Convertido:</span>
+          </span>
+          <span id="convert-result-model-badge" class="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700">Claude</span>
+        </div>
+
+        <div class="relative">
+          <textarea 
+            id="convert-result-textarea" 
+            rows="7" 
+            class="w-full p-3 bg-slate-50 border border-slate-300 rounded-xl text-xs font-mono leading-relaxed focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          ></textarea>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
+          <button 
+            type="button" 
+            onclick="copyConvertedPromptText()" 
+            class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer"
+          >
+            <i class="fa-regular fa-copy"></i>
+            <span>Copiar Texto</span>
+          </button>
+          <button 
+            type="button" 
+            onclick="saveConvertedPromptToLibrary()" 
+            class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-medium flex items-center gap-1.5 shadow-sm transition-all cursor-pointer"
+          >
+            <i class="fa-solid fa-bookmark"></i>
+            <span>Guardar na Minha Biblioteca</span>
+          </button>
+        </div>
+      </div>
+  <!-- MODAL: CRIAR OU EDITAR SKILL -->
+  <div id="skill-edit-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl max-w-2xl w-full p-5 sm:p-6 shadow-xl border border-slate-200 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+        <h3 id="skill-edit-modal-title" class="text-base font-bold text-slate-900 flex items-center gap-2">
+          <i class="fa-solid fa-bolt text-amber-500"></i>
+          <span>Criar Novo Skill</span>
+        </h3>
+        <button onclick="closeSkillEditModal()" class="text-slate-400 hover:text-slate-600 transition-colors p-1">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <form id="skill-edit-form" onsubmit="handleSkillEditSubmit(event)" class="space-y-4">
+        <input type="hidden" id="skill-edit-id" value="">
+        <input type="hidden" id="skill-edit-filepath" value="">
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Nome do Skill *</label>
+            <input 
+              type="text" 
+              id="skill-edit-name" 
+              required 
+              placeholder="ex: automacao-jardins ou ps5-sync" 
+              class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs sm:text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            >
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Modelo Recomendado *</label>
+            <select 
+              id="skill-edit-model" 
+              required 
+              class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs sm:text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            >
+              <option value="Claude">Claude (Anthropic)</option>
+              <option value="Google Gemini">Google Gemini</option>
+              <option value="ChatGPT">ChatGPT (OpenAI)</option>
+              <option value="DeepSeek">DeepSeek</option>
+              <option value="Mistral AI">Mistral AI</option>
+              <option value="xAI Grok">xAI Grok</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Programa</label>
+            <select 
+              id="skill-edit-program" 
+              class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            >
+              <option value="Google Antigravity">Google Antigravity</option>
+              <option value="OpenCode">OpenCode</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Breve Descrição *</label>
+            <input 
+              type="text" 
+              id="skill-edit-desc" 
+              required 
+              placeholder="Para que serve este skill..." 
+              class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs sm:text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            >
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Instruções / Conteúdo Markdown (SKILL.md) *</label>
+          <textarea 
+            id="skill-edit-content" 
+            required 
+            rows="10" 
+            placeholder="# Instruções do Skill&#10;&#10;Descreve o que o agente deve fazer, passos, exemplos e ferramentas a utilizar..." 
+            class="w-full p-3 bg-slate-50 border border-slate-300 rounded-xl text-xs font-mono leading-relaxed focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          ></textarea>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+          <button 
+            type="button" 
+            onclick="closeSkillEditModal()" 
+            class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-medium transition-colors cursor-pointer"
+          >
+            Cancelar
+          </button>
+          <button 
+            type="submit" 
+            id="skill-edit-submit-btn" 
+            class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-medium shadow-md shadow-indigo-100 transition-all cursor-pointer flex items-center gap-1.5"
+          >
+            <i class="fa-solid fa-floppy-disk"></i>
+            <span>Guardar Skill</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: CONVERTER SKILL PARA OUTRO MODELO -->
+  <div id="skill-convert-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl max-w-2xl w-full p-5 sm:p-6 shadow-xl border border-slate-200 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+        <div>
+          <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+            <i class="fa-solid fa-wand-magic-sparkles text-amber-500"></i>
+            <span>Converter / Otimizar Skill para Outro Modelo</span>
+          </h3>
+          <p class="text-xs text-slate-500 mt-0.5">
+            Adapta as diretrizes, sintaxe e estrutura do <code id="skill-convert-name" class="font-bold text-slate-700"></code> para o modelo pretendido.
+          </p>
+        </div>
+        <button onclick="closeSkillConvertModal()" class="text-slate-400 hover:text-slate-600 transition-colors p-1">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Current Model Info -->
+      <div class="mb-4 p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+        <span class="text-xs text-slate-600 font-medium">Modelo Original do Skill:</span>
+        <span id="skill-convert-current-model-badge" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200">
+          Claude
+        </span>
+      </div>
+
+      <!-- Target Model Selection -->
+      <div class="mb-4">
+        <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">Escolhe o Modelo de Destino:</label>
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2" id="skill-convert-model-options">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- Convert Action Button -->
+      <div class="mb-4">
+        <button 
+          type="button" 
+          id="btn-execute-skill-conversion" 
+          onclick="handleExecuteSkillConversion()" 
+          class="w-full py-2.5 bg-gradient-to-r from-amber-500 to-indigo-600 hover:from-amber-600 hover:to-indigo-700 active:from-amber-700 active:to-indigo-800 text-white font-semibold rounded-xl text-xs sm:text-sm shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer"
+        >
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+          <span id="btn-execute-skill-conversion-text">Converter Skill com IA</span>
+        </button>
+      </div>
+
+      <!-- Loading State -->
+      <div id="skill-convert-loading-state" class="hidden py-8 text-center space-y-2">
+        <i class="fa-solid fa-circle-notch fa-spin text-2xl text-amber-500"></i>
+        <p class="text-xs text-slate-600 font-medium">A otimizar as instruções do skill para o modelo escolhido...</p>
+      </div>
+
+      <!-- Converted Result Box -->
+      <div id="skill-convert-result-box" class="hidden space-y-3 pt-2 border-t border-slate-100">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+            <i class="fa-solid fa-circle-check text-emerald-500"></i>
+            <span>Skill Convertido:</span>
+          </span>
+          <span id="skill-convert-result-model-badge" class="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700">Gemini</span>
+        </div>
+
+        <div class="relative">
+          <textarea 
+            id="skill-convert-result-textarea" 
+            rows="9" 
+            class="w-full p-3 bg-slate-50 border border-slate-300 rounded-xl text-xs font-mono leading-relaxed focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          ></textarea>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
+          <button 
+            type="button" 
+            onclick="copyConvertedSkillText()" 
+            class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer"
+          >
+            <i class="fa-regular fa-copy"></i>
+            <span>Copiar Conteúdo</span>
+          </button>
+          <button 
+            type="button" 
+            onclick="saveConvertedSkillToLibrary()" 
+            class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-medium flex items-center gap-1.5 shadow-sm transition-all cursor-pointer"
+          >
+            <i class="fa-solid fa-bolt"></i>
+            <span>Guardar nos Meus Skills</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: PLAYER DE VÍDEO & DETALHES DE MÉDIA (FACEBOOK) -->
+  <div id="media-player-modal" class="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 hidden">
+    <div class="bg-white rounded-2xl max-w-2xl w-full p-4 sm:p-6 shadow-2xl border border-slate-200 max-h-[95vh] overflow-y-auto space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div class="flex items-center gap-2 overflow-hidden">
+          <span class="p-1.5 rounded-lg bg-sky-50 text-sky-600 text-sm">
+            <i class="fa-brands fa-facebook"></i>
+          </span>
+          <h3 id="media-player-modal-title" class="text-sm sm:text-base font-bold text-slate-900 truncate">
+            Reproduzir Vídeo
+          </h3>
+        </div>
+        <button onclick="closeMediaPlayerModal()" class="text-slate-400 hover:text-slate-600 transition-colors p-1.5 cursor-pointer">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Player de Vídeo HTML5 (Totalmente compatível com iPhone Safari) -->
+      <div id="media-player-container" class="relative bg-black rounded-xl overflow-hidden aspect-video flex items-center justify-center">
+        <video 
+          id="media-player-video" 
+          controls 
+          playsinline 
+          webkit-playsinline 
+          preload="metadata" 
+          class="w-full h-full object-contain"
+        >
+          O teu navegador não suporta este vídeo.
+        </video>
+      </div>
+
+      <!-- Informações do Vídeo & Resumo IA -->
+      <div class="space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-2 text-xs">
+          <div class="flex items-center gap-2">
+            <span id="media-player-source" class="font-semibold text-slate-700">Facebook</span>
+            <span class="text-slate-300">&bull;</span>
+            <span id="media-player-author" class="text-slate-500">Autor</span>
+          </div>
+          <span id="media-player-category" class="px-2.5 py-0.5 rounded-full bg-sky-50 text-sky-700 font-semibold text-[11px]">Geral</span>
+        </div>
+
+        <!-- Caixa de Resumo IA -->
+        <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-1.5">
+          <div class="flex items-center gap-1.5 text-xs font-bold text-indigo-700">
+            <i class="fa-solid fa-wand-magic-sparkles text-amber-500"></i>
+            <span>Resumo Explicativo por IA</span>
+          </div>
+          <p id="media-player-summary" class="text-xs text-slate-700 leading-relaxed">
+            Sem resumo disponível.
+          </p>
+        </div>
+
+        <div class="flex items-center justify-between pt-2 border-t border-slate-100">
+          <a 
+            id="media-player-original-link" 
+            href="#" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="text-xs font-semibold text-sky-600 hover:text-sky-800 flex items-center gap-1.5"
+          >
+            <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+            <span>Ver no Facebook Original</span>
+          </a>
+          <button 
+            type="button" 
+            onclick="closeMediaPlayerModal()" 
+            class="px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition-colors cursor-pointer"
+          >
+            Fechar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2"></div>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-500">
+    AI Toolbox &bull; Hub de Projetos e Ferramentas &bull; Dados sincronizados localmente em SQLite &bull; Criado para o Tiago
+  </footer>
+
+  <script src="/app.js"></script>
+</body>
+</html>
